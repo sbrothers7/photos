@@ -194,6 +194,10 @@ a:hover {
     /* staggered fade-in on load */
     opacity: 0;
     transform: translateY(10px);
+    animation: none;
+}
+
+.photo-card.animate {
     animation: card-in 0.55s var(--ease-out) forwards;
 }
 

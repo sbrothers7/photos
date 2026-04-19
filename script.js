@@ -115,3 +115,22 @@ function createPhotoCard({ file, ext = 'jpeg', title = '', location = '', date =
 
     return card;
 }
+
+function waitForImages() {
+    const cards = document.querySelectorAll('.photo-card');
+    const imgs = [...cards].map(card => card.querySelector('img'));
+
+    const promises = imgs.map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+            img.addEventListener('load', resolve);
+            img.addEventListener('error', resolve); // don't hang on broken images
+        });
+    });
+
+    Promise.all(promises).then(() => {
+        cards.forEach((card, i) => {
+            setTimeout(() => card.classList.add('animate'), i * 60);
+        });
+    });
+}
