@@ -8,8 +8,21 @@ function setupHandlers() {
         card.addEventListener('click', async () => {
             const img = card.querySelector('img');
 
-            // Set image
-            lightboxImg.src = img.dataset.full || img.src;
+            // Clear previous image immediately
+            lightboxImg.src = '';
+            lightboxImg.style.opacity = '0';
+
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
+
+            // Fade new image in once loaded
+            const full = img.dataset.full || img.src;
+            const newImg = new Image();
+            newImg.onload = () => {
+                lightboxImg.src = full;
+                lightboxImg.style.opacity = '1';
+            };
+            newImg.src = full;
             lightboxImg.alt = img.alt;
             lightbox.classList.add('open');
             document.body.style.overflow = 'hidden';
