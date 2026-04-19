@@ -3,39 +3,41 @@ const lightboxImg = document.querySelector('.lightbox_img');
 const lightboxCaption = document.querySelector('.lightbox_caption');
 const lightboxMeta = document.querySelector('.lightbox_meta');
 
-document.querySelectorAll('.photo-card').forEach(card => {
-    card.addEventListener('click', async () => {
-        const img = card.querySelector('img');
+function setupHandlers() {
+    document.querySelectorAll('.photo-card').forEach(card => {
+        card.addEventListener('click', async () => {
+            const img = card.querySelector('img');
 
-        // Set image
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightbox.classList.add('open');
-        document.body.style.overflow = 'hidden';
+            // Set image
+            lightboxImg.src = img.dataset.full || img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.classList.add('open');
+            document.body.style.overflow = 'hidden';
 
-        // Manual attributes
-        const title = card.dataset.title || img.alt || '';
-        const location = card.dataset.location || '';
-        const date = card.dataset.date || '';
-        const note = card.dataset.note || '';
+            // Manual attributes
+            const title = card.dataset.title || img.alt || '';
+            const location = card.dataset.location || '';
+            const date = card.dataset.date || '';
+            const note = card.dataset.note || '';
 
-        // Show manual data immediately while EXIF loads
-        renderMeta({ title, location, date, note });
+            // Show manual data immediately while EXIF loads
+            renderMeta({ title, location, date, note });
 
-        // EXIF data (async)
-        try {
-            const exif = await exifr.parse(img.src, [
-                'Make', 'Model',
-                'FocalLength', 'FNumber', 'ApertureValue', 'ExposureTime', 'ISOSpeedRatings',
-                'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef'
-            ]);
-            console.log('EXIF result:', exif); // check
-            renderMeta({ title, location, date, note, exif });
-        } catch (e) {
-            console.log("EXIF failed: ", e);
-        }
+            // EXIF data (async)
+            try {
+                const exif = await exifr.parse(img.src, [
+                    'Make', 'Model',
+                    'FocalLength', 'FNumber', 'ApertureValue', 'ExposureTime', 'ISOSpeedRatings',
+                    'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef'
+                ]);
+                console.log('EXIF result:', exif); // check
+                renderMeta({ title, location, date, note, exif });
+            } catch (e) {
+                console.log("EXIF failed: ", e);
+            }
+        });
     });
-});
+}
 
 function renderMeta({ title, location, date, note, exif }) {
     const fmt = (v) => v != null ? String(v) : null;
@@ -89,4 +91,27 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbo
 function closeLightbox() {
     lightbox.classList.remove('open');
     document.body.style.overflow = '';
+}
+
+function createPhotoCard({ file, ext = 'jpeg', title = '', location = '', date = '', note = '' }) {
+    const card = document.createElement('div');
+    card.className = 'photo-card';
+    if (title) card.dataset.title = title;
+    if (location) card.dataset.location = location;
+    if (date) card.dataset.date = date;
+    if (note) card.dataset.note = note;
+
+    card.innerHTML = `
+        <img src="../thumbnails/${file}.${ext}"
+            data-full="../images/${file}.${ext}"
+            alt="${title || file}">
+        <div class="photo-card_overlay">
+        <div class="photo-card_info">
+            ${title ? `<p class="photo-card_label">${title}</p>` : ''}
+            ${date ? `<p class="photo-card_date">${date}</p>` : ''}
+        </div>
+        </div>
+    `;
+
+    return card;
 }

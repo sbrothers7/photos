@@ -3,7 +3,7 @@
 
 <head>
     <script src="head-common.js"></script>
-    <title>Photos - Misc</title>
+    <title>Photos - Miscellaneous</title>
 </head>
 
 <script src="components.js"></script>
@@ -14,36 +14,27 @@
     <img-lightbox></img-lightbox>
 
     <div class="page">
-        <div class="masonry">
-            <div class="photo-card">
-                <img src="../images/IMG_7702.JPG">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_1261.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_4686.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_4253.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_1646.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_1835.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_2758.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_2791.jpeg">
-            </div>
-        </div>
+        <div class="masonry"></div>
     </div>
 </body>
 
 <script src="../script.js"></script>
-<script>renderNav("Miscellaneous");</script>
+<script>
+    renderNav("Miscellaneous");
+
+    const photos = [
+        { file: 'IMG_7702', ext: 'JPG' },
+        { file: 'IMG_1261' },
+        { file: 'IMG_4686' },
+        { file: 'IMG_4253' },
+        { file: 'IMG_1646' },
+        { file: 'IMG_1835' },
+        { file: 'IMG_2758' },
+        { file: 'IMG_2791' }
+    ];
+    const grid = document.querySelector('.masonry');
+    photos.forEach(photo => grid.appendChild(createPhotoCard(photo)));
+    setupHandlers();
+</script>
 
 </html>

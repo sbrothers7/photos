@@ -1,0 +1,34 @@
+name: Generate thumbnails
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'images/**'
+
+jobs:
+  thumbnails:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ImageMagick
+        run: sudo apt-get install -y imagemagick
+
+      - name: Generate thumbnails
+        run: |
+          mkdir -p thumbnails
+          for f in images/*; do
+            fname=$(basename "$f")
+            if [ ! -f "thumbnails/$fname" ]; then
+              magick "$f" -resize 800x800> -quality 75 "thumbnails/$fname"
+            fi
+          done
+
+      - name: Commit thumbnails
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add thumbnails/
+          git diff --staged --quiet || git commit -m "chore: generate thumbnails"
+          git push

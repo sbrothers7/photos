@@ -14,18 +14,21 @@
     <img-lightbox></img-lightbox>
 
     <div class="page">
-        <div class="masonry">
-            <div class="photo-card">
-                <img src="../images/IMG_6602.JPG">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_6451.JPG">
-            </div>
-        </div>
+        <div class="masonry"></div>
     </div>
 </body>
 
 <script src="../script.js"></script>
-<script>renderNav("Sky");</script>
+<script>
+    renderNav("Sky");
+
+    const photos = [
+        { file: 'IMG_6602', ext: 'JPG' },
+        { file: 'IMG_6451', ext: 'JPG' },
+    ];
+    const grid = document.querySelector('.masonry');
+    photos.forEach(photo => grid.appendChild(createPhotoCard(photo)));
+    setupHandlers();
+</script>
 
 </html>

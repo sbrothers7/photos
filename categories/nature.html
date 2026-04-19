@@ -14,36 +14,27 @@
     <img-lightbox></img-lightbox>
 
     <div class="page">
-        <div class="masonry">
-            <div class="photo-card">
-                <img src="../images/IMG_0227.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_4189.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_7215.JPG">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_5468.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_3351.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_4542.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_6106.jpeg">
-            </div>
-            <div class="photo-card">
-                <img src="../images/IMG_6102.jpeg">
-            </div>
-        </div>
+        <div class="masonry"></div>
     </div>
 </body>
 
 <script src="../script.js"></script>
-<script>renderNav("Nature");</script>
+<script>
+    renderNav("Nature");
+
+    const photos = [
+        { file: 'IMG_0227' },
+        { file: 'IMG_4189' },
+        { file: 'IMG_7215', ext: 'JPG' },
+        { file: 'IMG_5468' },
+        { file: 'IMG_3351' },
+        { file: 'IMG_4542' },
+        { file: 'IMG_6106' },
+        { file: 'IMG_6102' }
+    ];
+    const grid = document.querySelector('.masonry');
+    photos.forEach(photo => grid.appendChild(createPhotoCard(photo)));
+    setupHandlers();
+</script>
 
 </html>
