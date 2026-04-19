@@ -335,7 +335,7 @@ a:hover {
     box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
     transform: scale(0.97);
     transition: transform 0.4s var(--ease-out), opacity 0.25s ease;
-    background: var(--off-white);
+    /* background: var(--off-white); */
     flex-shrink: 0;
 }
 
