@@ -8,6 +8,15 @@ function setupHandlers() {
         card.addEventListener('click', async () => {
             const img = card.querySelector('img');
 
+            // placeholder height
+            const aspect = img.naturalWidth / img.naturalHeight;
+            const maxH = window.innerHeight * 0.75; // matches your max-height: 75vh
+            const maxW = lightboxImg.parentElement.clientWidth * 0.9; // matches max-width: 90vw
+            const reservedH = Math.min(maxH, maxW / aspect);
+
+            lightboxImg.style.height = `${reservedH}px`;
+            // lightboxImg.style.width = `${Math.min(maxW, reservedH * aspect)}px`;
+
             // Clear previous image immediately
             lightboxImg.src = '';
             lightboxImg.style.opacity = '0';
@@ -21,6 +30,8 @@ function setupHandlers() {
             newImg.onload = () => {
                 lightboxImg.src = full;
                 lightboxImg.style.opacity = '1';
+                lightboxImg.style.height = '';
+                // lightboxImg.style.width = '';
             };
             newImg.src = full;
             lightboxImg.alt = img.alt;
@@ -34,7 +45,7 @@ function setupHandlers() {
             const note = card.dataset.note || '';
 
             // Show manual data immediately while EXIF loads
-            renderMeta({ title, location, date, note });
+            renderMeta({ title, location, date, note, full });
 
             // EXIF data (async)
             try {
@@ -44,7 +55,7 @@ function setupHandlers() {
                     'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef'
                 ]);
                 console.log('EXIF result:', exif); // check
-                renderMeta({ title, location, date, note, exif });
+                renderMeta({ title, location, date, note, exif, full });
             } catch (e) {
                 console.log("EXIF failed: ", e);
             }
@@ -52,7 +63,7 @@ function setupHandlers() {
     });
 }
 
-function renderMeta({ title, location, date, note, exif }) {
+function renderMeta({ title, location, date, note, exif, full }) {
     const fmt = (v) => v != null ? String(v) : null;
 
     const camera = exif?.Make && exif?.Model ? `${exif.Make} ${exif.Model}` : null;
@@ -92,6 +103,7 @@ function renderMeta({ title, location, date, note, exif }) {
         ${[focal, aperture, shutter, iso].filter(Boolean).length ? `
         <li><span>Exposure</span>${[focal, aperture, shutter, iso].filter(Boolean).join('  ·  ')}</li>` : ''}
         ${gps ? `<li><span>GPS</span>${gps}</li>` : ''}
+        <a class="lbm-download" href=${full} download>Download</a>
         <li>© 2026 Siwool Um <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a></li>
     </ul>` : ''}
     `;
@@ -119,10 +131,10 @@ function createPhotoCard({ file, ext = 'jpeg', title = '', location = '', date =
             data-full="../images/${file}.${ext}"
             alt="${title || file}">
         <div class="photo-card_overlay">
-        <div class="photo-card_info">
-            ${title ? `<p class="photo-card_label">${title}</p>` : ''}
-            ${date ? `<p class="photo-card_date">${date}</p>` : ''}
-        </div>
+            <div class="photo-card_info">
+                ${title ? `<p class="photo-card_label">${title}</p>` : ''}
+                ${date ? `<p class="photo-card_date">${date}</p>` : ''}
+            </div>
         </div>
     `;
 
