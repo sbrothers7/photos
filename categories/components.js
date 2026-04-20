@@ -16,10 +16,10 @@ function renderNav(title) {
     nav.innerHTML = `
         <span class="nav-title">${title}</span>
         <div class="nav-links">
-            <a href="../categories/infrastructure.html">Infrastructure</a>
             <a href="../categories/nature.html">Nature</a>
             <a href="../categories/seasonal.html">Seasonal</a>
             <a href="../categories/sky.html">Sky</a>
+            <a href="../categories/infrastructure.html">Infrastructure</a>
             <a href="../categories/misc.html">Misc</a>
             <a href="../index.html">Home</a>
         </div>
