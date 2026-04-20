@@ -19,9 +19,18 @@ jobs:
         run: |
           mkdir -p thumbnails
           for f in images/*; do
+            [ -f "$f" ] || continue
             fname=$(basename "$f")
+            ext="${fname##*.}"
+            extlower=$(echo "$ext" | tr '[:upper:]' '[:lower:]')
+
+            case "$extlower" in
+              jpg|jpeg) ;;
+              *) continue ;;
+            esac
+
             if [ ! -f "thumbnails/$fname" ]; then
-              magick "$f" -resize 800x800> -quality 75 "thumbnails/$fname"
+              convert "$f" -resize 800x800> -quality 75 "thumbnails/$fname"
             fi
           done
 
