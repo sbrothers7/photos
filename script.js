@@ -52,7 +52,8 @@ function setupHandlers() {
                 const exif = await exifr.parse(img.src, [
                     'Make', 'Model',
                     'FocalLength', 'FNumber', 'ApertureValue', 'ExposureTime', 'ISOSpeedRatings',
-                    'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef'
+                    'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef',
+                    'ExifImageWidth', 'ExifImageHeight'  // ← add these
                 ]);
                 console.log('EXIF result:', exif); // check
                 renderMeta({ title, location, date, note, exif, full });
@@ -77,6 +78,9 @@ function renderMeta({ title, location, date, note, exif, full }) {
     const exifDate = exif?.DateTimeOriginal
         ? new Date(exif.DateTimeOriginal).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
         : null;
+    const dimensions = exif?.ExifImageWidth && exif?.ExifImageHeight
+        ? `${exif.ExifImageWidth} × ${exif.ExifImageHeight}`
+        : null;
 
     function dmsToDecimal([deg, min, sec]) {
         return deg + min / 60 + sec / 3600;
@@ -98,6 +102,7 @@ function renderMeta({ title, location, date, note, exif, full }) {
 
     ${(camera || lens || focal || aperture || shutter || iso || gps) ? `
     <ul class="lbm-exif">
+        ${dimensions ? `<li><span>Size</span>${dimensions}</li>` : ''}
         ${camera ? `<li><span>Camera</span>${camera}</li>` : ''}
         ${lens ? `<li><span>Lens</span>${lens}</li>` : ''}
         ${[focal, aperture, shutter, iso].filter(Boolean).length ? `

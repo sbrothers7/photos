@@ -30,7 +30,7 @@ jobs:
             esac
 
             if [ ! -f "thumbnails/$fname" ]; then
-              convert "$f" -resize 800x800> -quality 75 "thumbnails/$fname"
+              convert "$f" -resize "800x800>" "thumbnails/$fname" -quality 75
             fi
           done
 
